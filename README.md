@@ -23,7 +23,6 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 ### Verificando as dependências 
 [Documentação](https://portinari.io/guides/getting-started)
 
-> Bash
 ```
  "dependencies": {
     "@angular/animations": "~8.0.0",
@@ -39,6 +38,18 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
     "zone.js": "~0.9.1"
     ...
   }
+```
+
+### Instalando o npm
+> Bash
+```
+ npm install
+```
+
+### Adicionando portinari ao projeto.
+> Bash
+```
+ ng add @portinari/portinari-ui
 ```
 
 
