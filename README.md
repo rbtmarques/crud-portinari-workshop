@@ -9,16 +9,38 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 ### Versão correta do angular cli.
 
 > Bash
-
 ```
   npm install -g @angular/cli@8.0.0
 ```
 
-> Inicializando o projeto
+### Inicializando um projeto angular novo.
 
+> Bash
 ```
-  ng new crud-portinari --skipInstall
+ ng new crud-portinari --skipInstall --routing --style=css
 ```
+
+### Verificando as dependências 
+[Documentação](https://portinari.io/guides/getting-started)
+
+> Bash
+```
+ "dependencies": {
+    "@angular/animations": "~8.0.0",
+    "@angular/common": "~8.0.0",
+    "@angular/compiler": "~8.0.0",
+    "@angular/core": "~8.0.0",
+    "@angular/forms": "~8.0.0",
+    "@angular/platform-browser": "~8.0.0",
+    "@angular/platform-browser-dynamic": "~8.0.0",
+    "@angular/platform-server": "~8.0.0",
+    "@angular/router": "~8.0.0",
+    "rxjs": "~6.4.0",
+    "zone.js": "~0.9.1"
+    ...
+  }
+```
+
 
 ### people-rounting.module
 
