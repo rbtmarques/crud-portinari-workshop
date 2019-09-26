@@ -11,7 +11,13 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 > Bash
 
 ```
-    
+  npm install -g @angular/cli@8.0.0
+```
+
+> Inicializando o projeto
+
+```
+  ng new crud-portinari --skipInstall
 ```
 
 ### people-rounting.module
