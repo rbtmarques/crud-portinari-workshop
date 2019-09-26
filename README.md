@@ -52,6 +52,84 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
  ng add @portinari/portinari-ui
 ```
 
+### Configuração dos módulos do projeto
+
+### Criação do módulo de Shared.
+
+> Bash
+```
+ ng g m shared
+```
+
+### shared.module.ts
+
+> TS
+```
+  @NgModule({
+    imports: [
+      CommonModule,
+      FormsModule,
+      PoModule
+    ],
+    exports: [
+      CommonModule,
+      FormsModule,
+      PoModule
+    ]
+  })
+```
+
+### app.module.ts
+
+> TS
+```
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    SharedModule,
+    RouterModule.forRoot([])
+  ]
+```
+
+### Criação do módulo de pessoas.
+
+> Bash
+```
+ ng g m people --routing
+```
+
+### Criação do componente de Lista
+
+> Bash
+```
+ ng g c people\people-list
+```
+
+### Criação do componente de Visualização.
+
+> Bash
+```
+ ng g c people\people-view
+```
+
+### Criação do componente de Formulário de Edição.
+
+> Bash
+```
+ ng g c people\people-form
+```
+
+### people.module.ts
+
+> TS
+```
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    SharedModule,
+    RouterModule.forRoot([])
+  ]
+```
 
 ### people-rounting.module
 
@@ -64,6 +142,27 @@ const routes: Routes = [
   { path: 'new', component: PeopleFormComponent }
 ];
 ```
+
+### app-routing.module.ts
+
+> TS
+```
+const routes: Routes = [
+  {
+    path: 'people',
+    loadChildren: () => import('../app/people/people.module').then(m => m.PeopleModule)
+  },
+  { path: '', redirectTo: '/people', pathMatch: 'full'}
+];
+```
+
+### app.component.ts
+
+> TS
+```
+  { label: 'Pessoas', link: '/people' }
+```
+
 
 ### people-list.component
 
