@@ -50,6 +50,7 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 > Bash
 ```
  ng add @portinari/portinari-ui
+ npm i @portinari/portinari-templates
 ```
 
 ### Configuração dos módulos do projeto
@@ -66,16 +67,18 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 > TS
 ```
   @NgModule({
-    imports: [
-      CommonModule,
-      FormsModule,
-      PoModule
-    ],
-    exports: [
-      CommonModule,
-      FormsModule,
-      PoModule
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    PoModule,
+    PoTemplatesModule
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    PoModule,
+    PoTemplatesModule
+  ]
   })
 ```
 
@@ -156,11 +159,26 @@ const routes: Routes = [
 ];
 ```
 
+### app.component.html
+
+> HTML
+```
+<div class="po-wrapper">
+  <po-toolbar p-title="Workshop Portinari"></po-toolbar>
+
+  <po-menu [p-menus]="menus"></po-menu>
+
+  <router-outlet></router-outlet>
+</div>
+```
+
 ### app.component.ts
 
 > TS
 ```
-  { label: 'Pessoas', link: '/people' }
+  readonly menus: Array<PoMenuItem> = [
+    { label: 'Pessoas', link: '/people' }
+  ];
 ```
 
 
@@ -168,24 +186,24 @@ const routes: Routes = [
 
 > HTML
 ```
-<thf-page-dynamic-table
-  t-title="Pessoas"
-  t-service-api="https://thf.totvs.com.br/sample/api/people"
-  [t-actions]="actions"
-  [t-fields]="fields">
-</thf-page-dynamic-table>
+<po-page-dynamic-table
+  p-title="Pessoas"
+  p-service-api="https://thf.totvs.com.br/sample/api/people"
+  [p-actions]="actions"
+  [p-fields]="fields">
+</po-page-dynamic-table>
 ```
 
 > TS
 ```
-  readonly actions: ThfPageDynamicTableActions = {
+  readonly actions: PoPageDynamicTableActions = {
     detail: 'people/view/:id',
     edit: 'people/edit/:id',
     new: 'people/new',
     remove: true
   };
 
-  readonly fields: Array<ThfPageDynamicTableField> = [
+  readonly fields: Array<PoPageDynamicTableField> = [
     { property: 'id', key: true },
     { property: 'name', label: 'Nome' },
     { property: 'birthdate', label: 'Data de nascimento', type: 'date' }
@@ -197,25 +215,25 @@ const routes: Routes = [
 
 > HTML
 ```
-<thf-page-dynamic-detail
-  t-service-api="https://thf.totvs.com.br/sample/api/people"
-  [t-title]="title"
-  [t-actions]="actions"
-  [t-fields]="fields">
-</thf-page-dynamic-detail>
+<po-page-dynamic-detail
+  p-service-api="https://thf.totvs.com.br/sample/api/people"
+  [p-title]="title"
+  [p-actions]="actions"
+  [p-fields]="fields">
+</po-page-dynamic-detail>
 ```
 
 > TS
 ```
   title = 'Visualizando';
 
-  readonly actions: ThfPageDynamicDetailActions = {
+  readonly actions: PoPageDynamicDetailActions = {
     back: '/',
     edit: 'people/edit/:id',
     remove: '/'
   };
 
-  readonly fields: Array<ThfPageDynamicDetailField> = [
+  readonly fields: Array<PoPageDynamicDetailField> = [
     { property: 'id', gridColumns: 2, key: true, divider: 'Dados pessoais' },
     { property: 'name', label: 'Nome', gridXlColumns: 4, gridLgColumns: 4 },
     { property: 'birthdate', type: 'date', label: 'Data de aniversário', gridXlColumns: 4, gridLgColumns: 4 },
@@ -238,43 +256,44 @@ const routes: Routes = [
 
 > HTML
 ```
-<thf-page-dynamic-edit
-  t-service-api="https://thf.totvs.com.br/sample/api/people"
-  [t-title]="title"
-  [t-actions]="actions"
-  [t-fields]="fields">
-</thf-page-dynamic-edit>
+<po-page-dynamic-edit
+  p-service-api="https://thf.totvs.com.br/sample/api/people"
+  [p-title]="title"
+  [p-actions]="actions"
+  [p-fields]="fields">
+</po-page-dynamic-edit>
 ```
 
 > TS
 ```
-title = 'Nova pessoa';
+  title = 'Nova pessoa';
 
-actions: ThfPageDynamicEditActions = {
-  cancel: '/',
-  save: '/'
-};
+  actions: PoPageDynamicEditActions = {
+    cancel: '/',
+    save: '/'
+  };
+  
+  fields: Array<PoPageDynamicEditField> = [
+    { property: 'id', key: true, visible: false },
+    { label: 'Nome', property: 'name', divider: 'Dados pessoais' },
+    { label: 'Data de nascimento', property: 'birthdate', type: 'date' },
+    { label: 'Gênero', property: 'genre', gridXlColumns: 4, options: [
+      { value: 'feminino', label: 'Feminino' },
+      { value: 'masculino', label: 'Masculino' }
+    ]},
+    { label: 'Rua', property: 'street', divider: 'Endereço' },
+    { label: 'Cidade', property: 'city' },
+    { label: 'País', property: 'country' }
+  ];
+  
+  constructor(private activatedRoute: ActivatedRoute) { }
+  
+  ngOnInit() {
+    this.activatedRoute.params.subscribe(params => {
+      this.title = params.id ? 'Editando' : 'Nova pessoa';
+    });
+  }
 
-fields: Array<ThfPageDynamicEditField> = [
-  { property: 'id', key: true, visible: false },
-  { label: 'Nome', property: 'name', divider: 'Dados pessoais' },
-  { label: 'Data de nascimento', property: 'birthdate', type: 'date' },
-  { label: 'Gênero', property: 'genre', gridXlColumns: 4, options: [
-    { value: 'feminino', label: 'Feminino' },
-    { value: 'masculino', label: 'Masculino' }
-  ]},
-  { label: 'Rua', property: 'street', divider: 'Endereço' },
-  { label: 'Cidade', property: 'city' },
-  { label: 'País', property: 'country' }
-];
-
-constructor(private activatedRoute: ActivatedRoute) { }
-
-ngOnInit() {
-  this.activatedRoute.params.subscribe(params => {
-    this.title = params.id ? 'Editando' : 'Nova pessoa';
-  });
-}
 
 ```
 
