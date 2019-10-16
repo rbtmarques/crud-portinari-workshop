@@ -18,6 +18,7 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 > Bash
 ```
  ng new crud-portinari --skipInstall --routing --style=css
+ cd crud-portinari
 ```
 
 ### Verificando as dependências 
