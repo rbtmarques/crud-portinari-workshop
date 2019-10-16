@@ -66,7 +66,13 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 
 > TS
 ```
-  @NgModule({
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PoModule } from '@portinari/portinari-ui';
+import { PoTemplatesModule } from '@portinari/portinari-templates';
+
+@NgModule({
   imports: [
     CommonModule,
     FormsModule,
@@ -79,19 +85,39 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
     PoModule,
     PoTemplatesModule
   ]
-  })
+})
+export class SharedModule { }
+
 ```
 
 ### app.module.ts
 
 > TS
 ```
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { RouterModule } from '@angular/router';
+import { SharedModule } from './shared/shared.module';
+
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
     RouterModule.forRoot([])
-  ]
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
 ```
 
 ### Criação do módulo de pessoas.
@@ -105,51 +131,80 @@ Link da [Apresentação](https://drive.google.com/file/d/10l3WWkuAxJavu8F_EMtrQD
 
 > Bash
 ```
- ng g c people\people-list
+ ng g c people/people-list
 ```
 
 ### Criação do componente de Visualização.
 
 > Bash
 ```
- ng g c people\people-view
+ ng g c people/people-view
 ```
 
 ### Criação do componente de Formulário de Edição.
 
 > Bash
 ```
- ng g c people\people-form
+ ng g c people/people-form
 ```
 
 ### people.module.ts
 
 > TS
 ```
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { PeopleRoutingModule } from './people-routing.module';
+import { PeopleListComponent } from './people-list/people-list.component';
+import { PeopleViewComponent } from './people-view/people-view.component';
+import { PeopleFormComponent } from './people-form/people-form.component';
+import { SharedModule } from '../shared/shared.module';
+
+@NgModule({
+  declarations: [PeopleListComponent, PeopleViewComponent, PeopleFormComponent],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
+    CommonModule,
     SharedModule,
-    RouterModule.forRoot([])
+    PeopleRoutingModule
   ]
+})
+export class PeopleModule { }
+
 ```
 
 ### people-rounting.module
 
 > TS
 ```
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { PeopleListComponent } from './people-list/people-list.component';
+import { PeopleViewComponent } from './people-view/people-view.component';
+import { PeopleFormComponent } from './people-form/people-form.component';
+
 const routes: Routes = [
   { path: '', component: PeopleListComponent },
   { path: 'view/:id', component: PeopleViewComponent },
   { path: 'edit/:id', component: PeopleFormComponent },
   { path: 'new', component: PeopleFormComponent }
 ];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class PeopleRoutingModule { }
 ```
 
 ### app-routing.module.ts
 
 > TS
 ```
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+
 const routes: Routes = [
   {
     path: 'people',
@@ -157,6 +212,13 @@ const routes: Routes = [
   },
   { path: '', redirectTo: '/people', pathMatch: 'full'}
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
 ```
 
 ### app.component.html
@@ -176,9 +238,24 @@ const routes: Routes = [
 
 > TS
 ```
+import { Component } from '@angular/core';
+
+import { PoMenuItem } from '@portinari/portinari-ui';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
   readonly menus: Array<PoMenuItem> = [
     { label: 'Pessoas', link: '/people' }
   ];
+
+
+}
+
 ```
 
 
@@ -196,6 +273,16 @@ const routes: Routes = [
 
 > TS
 ```
+import { Component } from '@angular/core';
+import { PoPageDynamicTableActions, PoPageDynamicTableField } from '@portinari/portinari-templates';
+
+@Component({
+  selector: 'app-people-list',
+  templateUrl: './people-list.component.html',
+  styleUrls: ['./people-list.component.css']
+})
+export class PeopleListComponent {
+
   readonly actions: PoPageDynamicTableActions = {
     detail: 'people/view/:id',
     edit: 'people/edit/:id',
@@ -208,7 +295,7 @@ const routes: Routes = [
     { property: 'name', label: 'Nome' },
     { property: 'birthdate', label: 'Data de nascimento', type: 'date' }
   ];
-
+}
 ```
 
 ### people-view.component
@@ -225,6 +312,17 @@ const routes: Routes = [
 
 > TS
 ```
+import { Component, OnInit } from '@angular/core';
+import { PoPageDynamicDetailActions, PoPageDynamicDetailField } from '@portinari/portinari-templates';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-people-view',
+  templateUrl: './people-view.component.html',
+  styleUrls: ['./people-view.component.css']
+})
+export class PeopleViewComponent implements OnInit {
+
   title = 'Visualizando';
 
   readonly actions: PoPageDynamicDetailActions = {
@@ -250,6 +348,9 @@ const routes: Routes = [
       this.title = params.id ? `Vizualizando Pessoa ${params.id}` : 'Visualizando';
     });
   }
+
+}
+
 ```
 
 ### people-form.component
@@ -266,14 +367,25 @@ const routes: Routes = [
 
 > TS
 ```
+import { Component, OnInit } from '@angular/core';
+import { PoPageDynamicEditActions, PoPageDynamicEditField } from '@portinari/portinari-templates';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-people-form',
+  templateUrl: './people-form.component.html',
+  styleUrls: ['./people-form.component.css']
+})
+export class PeopleFormComponent implements OnInit {
+
   title = 'Nova pessoa';
 
-  actions: PoPageDynamicEditActions = {
+  public readonly actions: PoPageDynamicEditActions = {
     cancel: '/',
     save: '/'
   };
   
-  fields: Array<PoPageDynamicEditField> = [
+  public readonly fields: Array<PoPageDynamicEditField> = [
     { property: 'id', key: true, visible: false },
     { label: 'Nome', property: 'name', divider: 'Dados pessoais' },
     { label: 'Data de nascimento', property: 'birthdate', type: 'date' },
@@ -294,6 +406,6 @@ const routes: Routes = [
     });
   }
 
-
+}
 ```
 
