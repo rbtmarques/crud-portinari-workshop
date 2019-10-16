@@ -410,3 +410,10 @@ export class PeopleFormComponent implements OnInit {
 }
 ```
 
+### Execução do Projeto
+
+> Bash
+```
+ ng server --0
+```
+
